@@ -1,70 +1,142 @@
-# Getting Started with Create React App
+App challenges:
 
-This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
+1. Need to be able to navigate around to separate pages in our app.
+2. Need to allow user to login/logout.
+3. Need to handle forms in redux.
+4. Need to master CRUD operations in React/Redux.
+5. Errors handling.
 
-## Available Scripts
 
-In the project directory, you can run:
+React Router packages:
 
-### `yarn start`
+1. react-router
+2. react-router-dom
+3. react-router-native
+4. react-router-redux
 
-Runs the app in the development mode.\
-Open [http://localhost:3000](http://localhost:3000) to view it in the browser.
 
-The page will reload if you make edits.\
-You will also see any lint errors in the console.
+Steps:
 
-### `yarn test`
+1. In the app.js, import BrowserRouter, Route from 'react-router-dom' and create 2 functions "PageOne" and "PageTwo". These will return some dummy text.
 
-Launches the test runner in the interactive watch mode.\
-See the section about [running tests](https://facebook.github.io/create-react-app/docs/running-tests) for more information.
+2. In the app component, write jsx for BrowserRouter and Route. Pass the path, exact and component prop to Route.
 
-### `yarn build`
+```javaScript
 
-Builds the app for production to the `build` folder.\
-It correctly bundles React in production mode and optimizes the build for the best performance.
+import logo from './logo.svg';
+import './App.css';
+import {BrowserRouter, Route} from 'react-router-dom';
 
-The build is minified and the filenames include the hashes.\
-Your app is ready to be deployed!
+const PageOne= () => {
+  return <div>Page One</div>
+}
 
-See the section about [deployment](https://facebook.github.io/create-react-app/docs/deployment) for more information.
+const PageTwo= () => {
+  return <div>Page Two</div>
+}
+const App = () => {
+  return (
+    <div className="App">
+      <BrowserRouter>
+        <Route path="/" exact component={PageOne} />
+        <Route path="/PageTwo" component={PageTwo} />
+      </BrowserRouter>
+    </div>
+  );
+}
 
-### `yarn eject`
+export default App;
 
-**Note: this is a one-way operation. Once you `eject`, you can’t go back!**
+```
 
-If you aren’t satisfied with the build tool and configuration choices, you can `eject` at any time. This command will remove the single build dependency from your project.
+## About BrowserROuter ##
 
-Instead, it will copy all the configuration files and the transitive dependencies (webpack, Babel, ESLint, etc) right into your project so you have full control over them. All of the commands except `eject` will still work, but they will point to the copied scripts so you can tweak them. At this point you’re on your own.
+- React Router cares about the relative URL not the DOMAIN. Eg: if the URL is airbnb.com/listings/spain , then react-router will only care about "listings/spain". 
 
-You don’t have to ever use `eject`. The curated feature set is suitable for small and middle deployments, and you shouldn’t feel obligated to use this feature. However we understand that this tool wouldn’t be useful if you couldn’t customize it when you are ready for it.
+- The BrowserRouter internally creates an object of it's own called the "history" object. This "history" object is going to look at the url inside the "address bar" and it's going to extract 
+the part of url it cares about. 
 
-## Learn More
+- Different Routes can be matched with the same URL. 
 
-You can learn more in the [Create React App documentation](https://facebook.github.io/create-react-app/docs/getting-started).
+```javaScript
 
-To learn React, check out the [React documentation](https://reactjs.org/).
+        <Route path="/" exact component={PageOne} />
+        <Route path="/" exact component={PageTwo} />
+        // it will show both the component.
 
-### Code Splitting
+```
 
-This section has moved here: [https://facebook.github.io/create-react-app/docs/code-splitting](https://facebook.github.io/create-react-app/docs/code-splitting)
+This is absolutely by design because there are some cases where we'll define different route components deeply nested inside of different components inside of application. So, by deeply nesting routes, we can customize how some part of our app looks, depending upon the URL. We don't need to pass down some deep configuration through Redux or props or something like that to configure how a very deeply nested child component renders itself.
 
-### Analyzing the Bundle Size
+The exact prop:
 
-This section has moved here: [https://facebook.github.io/create-react-app/docs/analyzing-the-bundle-size](https://facebook.github.io/create-react-app/docs/analyzing-the-bundle-size)
+- When we pass "exact" prop directly in the Route component, it means exact={true}  
 
-### Making a Progressive Web App
+- If we remove that "exact" prop: 
 
-This section has moved here: [https://facebook.github.io/create-react-app/docs/making-a-progressive-web-app](https://facebook.github.io/create-react-app/docs/making-a-progressive-web-app)
+```javaScript
+        <Route path="/" component={PageOne} />
+        <Route path="/pageTwo" component={PageTwo} />
+```
 
-### Advanced Configuration
+In this example, if we go from "localhost:3000/" to "localhost:3000/pageTwo", it will show both "PageOne" and "PageTwo". This surprising behaviour is because it finds in the URL whether that "path" is present or not. In this case "/" is present in the "localhost:3000/pageTwo" as well, so it rendered both components.
 
-This section has moved here: [https://facebook.github.io/create-react-app/docs/advanced-configuration](https://facebook.github.io/create-react-app/docs/advanced-configuration)
+### Navigating through React Router ###
 
-### Deployment
+- Don't use <a href="/SomePath">Navigate</a> as it refreshes the whole page and voilates SPA guidelines.
 
-This section has moved here: [https://facebook.github.io/create-react-app/docs/deployment](https://facebook.github.io/create-react-app/docs/deployment)
+- use "Link" component/Tag :
 
-### `yarn build` fails to minify
+```javaScript
 
-This section has moved here: [https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify](https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify)
+<Link to="/pageTwo">Navigate to Page Two</Link>
+
+```
+
+On clicking on this link, it will take to Page Two.  
+
+
+How it works:
+
+1. User wants to navigate to another page.
+2. User clicks a "Link" tag.
+3. React Router prevents the browser from navigating to the new page and fetching new index.html file!!
+4. URL still changes.
+5. "History" sees updated URL, takes URL and sends it to BrowserRouter.
+6. BrowserRouter communicates the URL to Route components.
+7. Route components re-renders to show new set of components.
+
+Coming back to our application, we are setting path to show different components. I'm writing in the format: path => Component.
+
+1. / => StreamList
+2. /streams/new => StramCreate
+3. /streams/edit => StreamEdit
+4. /streams/delete => StreamsDelete
+5. /streams/show => StreamShow
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
