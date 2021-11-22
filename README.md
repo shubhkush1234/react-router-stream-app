@@ -114,9 +114,58 @@ Coming back to our application, we are setting path to show different components
 4. /streams/delete => StreamsDelete
 5. /streams/show => StreamShow
 
+Create all these 5 functional components and import it to app component.
+
+eg: 
+
+```javaScript
+
+import React from "react";
+
+const StreamCreate = () => {
+    return(
+        <div>
+            StreamCreate
+        </div>
+    )
+}
+
+export default StreamCreate;
+
+```
+
+- Now add routes for each component in the app.js. Remove previos waste stuff as well.
+
+```javaScript
+
+import logo from './logo.svg';
+import './App.css';
+import {BrowserRouter, Route} from 'react-router-dom';
+import StreamCreate from './components/StreamCreate';
+import StreamDelete from './components/StreamDelete';
+import StreamEdit from './components/StreamEdit';
+import StreamShow from './components/StreamShow';
+import StreamList from './components/StreamList';
+
+const App = () => {
+  return (
+    <div className="App">
+      <BrowserRouter>
+        <Route path="/" exact component={StreamList} />
+        <Route path="/streams/new" exact component={StreamCreate} />
+        <Route path="/streams/delete" exact component={StreamDelete} />
+        <Route path="/streams/show" exact component={StreamShow} />
+        <Route path="/streams/edit" exact component={StreamEdit} />
+
+      </BrowserRouter>
+    </div>
+  );
+}
+
+export default App;
 
 
-
+```
 
 
 
