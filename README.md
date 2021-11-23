@@ -1,3 +1,5 @@
+step. gri 52 hrs long course 
+
 App challenges:
 
 1. Need to be able to navigate around to separate pages in our app.
@@ -156,7 +158,6 @@ const App = () => {
         <Route path="/streams/delete" exact component={StreamDelete} />
         <Route path="/streams/show" exact component={StreamShow} />
         <Route path="/streams/edit" exact component={StreamEdit} />
-
       </BrowserRouter>
     </div>
   );
@@ -164,10 +165,35 @@ const App = () => {
 
 export default App;
 
-
 ```
 
+- We also need a akways visible Header component, so we'll make it as:
 
+```javaScript
+
+import React from 'react'
+import { Link } from 'react-router-dom';
+
+const Header = () => {
+    return (
+        <div className="ui secondary pointing menu">
+            <Link to="/" className="item">
+                Streamy
+            </Link>
+            <div className="right menu">
+                <Link to="/" className="item">
+                    All Streams
+                </Link>
+            </div>
+        </div>
+    )
+}
+export default Header;
+// add semantic ui cdn to index.html as well
+// Also add Header component in app.js like this:
+// inside browserRouter:      <Header/>
+
+```
 
 
 
